@@ -1,10 +1,18 @@
 import React from 'react'
+import { useState } from 'react';
 import ColorfulMessage1 from './components/ColorfulMessage1'
 import ColorfulMessage2 from './components/ColorfulMessage2'
 
 const App = () => {
     // イベントはここに記載
-    const onClickButton = () => alert();
+    const onClickCountUp = () => {
+        // useStateの更新関数.
+        setNum(num + 1);
+    };
+    // useState();は状態を動的に変える。配列の分割代入で使う。下段参照。
+    // 第一引数はstateで使う変数名。第二引数はstateを更新する関数。名前はset何々が一般的。
+    // デフォルトで引数を指定可能。この場合(0)
+    const [num, setNum] = useState(0);
     // cssスタイルを変数を使って当てる
     const contentStyleKoko =  {
         color: 'blue',
@@ -22,7 +30,7 @@ const App = () => {
         <p style={contentStyleKoko}>koko</p>
         {/* jsxのコンポーネント内のhtmlタグの中の()内は、jsが使える */}
         {/* jsxはhtmlタグの中にイベント(onClick)もそのまま記載出来る */}
-        <button onClick={onClickButton}>ボタンだってばさ</button>
+        <button onClick={onClickCountUp}>カウントアップだってばさ</button>
         <ColorfulMessage1 color="green" message="お元気ですかグリーン？"/>
         {/* コンポーネントはhtmlタグみたいに閉じタグでも書ける */}
         {/* propsの引数message部分をタグ内に書いたので、messageは不要 */}
@@ -32,8 +40,20 @@ const App = () => {
             ほんとなんだよ
             pupu
         </ColorfulMessage2>
+        <p>{num}</p>
     </>
     );
 };
 
 export default App;
+
+// -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
+
+// -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -   -
+// 分割代入配列の場合
+const myProf2 = ["ひろし", 23];
+// オブジェクトの場合はプロパティ名で受け取るが、配列の場合、順番で受け取ることになる。
+const [name2, age2] = myProf2;
+const message3 = `${name2}です。${age2}よ。`
+console.log(message3);
+// ひろしです。23よ。
