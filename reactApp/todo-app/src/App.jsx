@@ -2,8 +2,10 @@
 /* eslint react-hooks/exhaustive-deps: off*/
 import React, { useEffect } from 'react'
 import { useState } from 'react';
+// export defaultした場合の書き方。
 import ColorfulMessage1 from './components/ColorfulMessage1'
-import ColorfulMessage2 from './components/ColorfulMessage2'
+// コンポーネントにexportを付けると、下記の記載にreactではこちらが主流。
+import { ColorfulMessage2 } from './components/ColorfulMessage2'
 
 // 再レンダリングはコンポーネントを上から再読み込みし、その差分を反映する。
 // stateが変化したり、親コンポーネントが変更したり、prorpseudoの値が変化すると再レンダリングが起こる

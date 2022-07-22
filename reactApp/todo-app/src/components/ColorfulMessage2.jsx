@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ColorfulMessage2 = (props) => {
+export const ColorfulMessage2 = (props) => {
     // 分割代入
     const { color, children } = props;
     const contentStyleogenki =  {
@@ -18,4 +18,5 @@ const ColorfulMessage2 = (props) => {
     );
 };
 
-export default ColorfulMessage2
+// コンポーネントにexportを付けると、下記の記載は不要。
+// export default ColorfulMessage2
