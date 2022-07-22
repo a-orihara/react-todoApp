@@ -3,62 +3,73 @@
 import React from 'react'
 import "./styles.css"
 // import React, { useEffect } from 'react'
-// import { useState } from 'react';
+import { useState } from 'react';
 // // export defaultした場合の書き方。
 // import ColorfulMessage1 from './components/ColorfulMessage1'
 // // コンポーネントにexportを付けると、下記の記載にreactではこちらが主流。打ち間違いをエラー検知してくれるから。
 // import { ColorfulMessage2 } from './components/ColorfulMessage2'
 
 export const App = () => {
-    return( 
-    <> 
-        {/* 未完了、入力するエリア */}
-        {/* reactのコンポーネントの場合、htmlタブのclassはclassNameと記載*/}
-        <div className="input-area">
-            {/* 入力エリア */}
-            <input placeholder="TODOを入力してね" type="text" />
-            {/* 入力完了ボタン */}
-            <button>追加する</button>
-        </div>
-        {/* 完了エリア */}
-        <div className="incomplete-area">
-            <p className="title">未完了のTODO</p>
-            <ul>
-                <li className="list-low">
-                    <div>
-                        <p>仮文1（TODOの内容）</p>
-                        <button>完了</button>
-                        <button>削除する</button>
-                    </div>
-                </li>
-                <li className="list-low">
-                    <div>
-                        <p>仮文2（TODOの内容）</p>
-                        <button>完了</button>
-                        <button>削除する</button>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div className="complete-area">
-            <p className="title">完了のTODO</p>
-            <ul>
-                <li className="list-low">
-                    <div>
-                        <p>仮文1（TODOの内容）</p>
-                        <button>戻す</button>
-                    </div>
-                </li>
-                <li className="list-low">
-                    <div>
-                        <p>仮文2（TODOの内容）</p>
-                        <button>戻す</button>
-                    </div>
-                </li>
-            </ul>
-        </div>
+  // 完了や未完了を表すのに配列を使用。また状態が変化するので、useStateを使用。
+  // useStateのデフォルト値はTODOの初期値
+  const [incompleteTodos, setIncompleteTodos] = useState("未完了1番", "未完了2番");
+  const [completeTodos, setCompleteTodos] = useState("完了1番", "完了2番");
+  return( 
+  <> 
+    {/* -   -   -未完了、入力するエリア-   -   - */}
+    {/* reactのコンポーネントの場合、htmlタブのclassはclassNameと記載*/}
+    <div className="input-area">
+      {/* 入力エリア */}
+      <input placeholder="TODOを入力してね" type="text" />
+      {/* 入力完了ボタン */}
+      <button>追加する</button>
+    </div>
+
+    {/* -   -   -完了エリア-   -   - */}
+    <div className="incomplete-area">
+      <p className="title">未完了のTODO</p>
+        <ul>
+          {/* incompleteTodosの配列から、map(変数名はtodo)で取り出す。 */}
+          {/* mapは配列の値を使った処理の結果が入る */}
+          {incompleteTodos.map((todo) => {
+            return (
+              // reactでは、map等の配列ループで返却する一番親のタグにkey={}を記載する。
+              // これは、reactは仮想DOMの差分だけを反映させるので、何番目が変化したのかという
+              // 情報をkeyとして与えてあげる必要がある。
+              <li key={todo} className="list-low">
+                <div>
+                  {/* todoのタイトルが入る */}
+                  <p>{todo}</p>
+                  <button>完了</button>
+                  <button>削除する</button>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+    </div>
+    <div className="complete-area">
+      <p className="title">完了のTODO</p>
+        <ul>
+          {completeTodos.map((todo) => {
+            return (
+              // reactでは、map等の配列ループで返却する一番親のタグにkey={}を記載する。
+              // これは、reactは仮想DOMの差分だけを反映させるので、何番目が変化したのかという
+              // 情報をkeyとして与えてあげる必要がある。
+              <li key={todo} className="list-low">
+                <div>
+                  {/* todoのタイトルが入る */}
+                  <p>{todo}</p>
+                  <button>完了</button>
+                  <button>削除する</button>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+    </div>
     </>
-    )
+  )
 };
 
 // =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =
