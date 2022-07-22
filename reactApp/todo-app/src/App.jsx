@@ -10,19 +10,38 @@ import { useState } from 'react';
 // import { ColorfulMessage2 } from './components/ColorfulMessage2'
 
 export const App = () => {
+  // todoText:inputに入力した値
+  const [todoText, setTodoText] = useState('');
   // 完了や未完了を表すのに配列を使用。また状態が変化するので、useStateを使用。
   // useStateのデフォルト値はTODOの初期値
-  const [incompleteTodos, setIncompleteTodos] = useState("未完了1番", "未完了2番");
-  const [completeTodos, setCompleteTodos] = useState("完了1番", "完了2番");
+  const [incompleteTodos, setIncompleteTodos] = useState(["未完了1番", "未完了2番"]);
+  const [completeTodos, setCompleteTodos] = useState(["完了1番", "完了2番"]);
+  // <input>の要素がonChangeイベントで変更があった時に、入ってくるイベント。この(event)は(e)でも何でもいい。
+  // <input>に値を入力する場合、通常こう書く。
+  const onChangeTodoText = (event) =>  {
+    // event.target.valueに入力した値が入る。入力した値をsetTodoTextの引数に入れてtodoTextを設定。
+    setTodoText(event.target.value);
+  }
+
+  const onClickAdd = () => {
+    // if文は処理が一文字の場合は省略可。
+    if (todoText === "") return;
+    // newTodos:これまでの未完了TODOと新たにINOUTに入力した値=todoText
+    const newTodos = [...incompleteTodos, todoText];
+    setIncompleteTodos(newTodos);
+    // 空文字でリセット
+    setTodoText("");
+    
+  }
   return( 
   <> 
     {/* -   -   -未完了、入力するエリア-   -   - */}
     {/* reactのコンポーネントの場合、htmlタブのclassはclassNameと記載*/}
     <div className="input-area">
-      {/* 入力エリア */}
-      <input placeholder="TODOを入力してね" type="text" />
+      {/* 入力エリア。入力した値＝{todoText}を、onChangeイベントを通して、入力エリアに表示する。 */}
+      <input placeholder="TODOを入力してね" type="text" value={todoText} onChange={onChangeTodoText}/>
       {/* 入力完了ボタン */}
-      <button>追加する</button>
+      <button onClick={onClickAdd}>追加する</button>
     </div>
 
     {/* -   -   -完了エリア-   -   - */}
