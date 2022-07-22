@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'
 import { useState } from 'react';
 // export defaultした場合の書き方。
 import ColorfulMessage1 from './components/ColorfulMessage1'
-// コンポーネントにexportを付けると、下記の記載にreactではこちらが主流。
+// コンポーネントにexportを付けると、下記の記載にreactではこちらが主流。打ち間違いをエラー検知してくれるから。
 import { ColorfulMessage2 } from './components/ColorfulMessage2'
 
 // 再レンダリングはコンポーネントを上から再読み込みし、その差分を反映する。
