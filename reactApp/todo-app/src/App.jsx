@@ -1,7 +1,7 @@
 // ファイルの先頭に、下記のように書くと、このファイルだけeslintの指定した設定をオフにすることが出来る(useEffectで使用)。
 /* eslint react-hooks/exhaustive-deps: off*/
 import React from 'react'
-// import "./styles.css"
+import "./styles.css"
 // import React, { useEffect } from 'react'
 // import { useState } from 'react';
 // // export defaultした場合の書き方。
@@ -13,22 +13,25 @@ export const App = () => {
     return( 
     <> 
         {/* 未完了、入力するエリア */}
-        <div>
+        {/* reactのコンポーネントの場合、htmlタブのclassはclassNameと記載*/}
+        <div className="input-area">
             {/* 入力エリア */}
             <input placeholder="TODOを入力してね" type="text" />
             {/* 入力完了ボタン */}
             <button>追加する</button>
         </div>
         {/* 完了エリア */}
-        <div>
-            <p>未完了エリア</p>
+        <div className="incomplete-area">
+            <p className="title">未完了のTODO</p>
             <ul>
-                <li>
+                <li className="list-low">
                     <div>
                         <p>仮文1（TODOの内容）</p>
                         <button>完了</button>
                         <button>削除する</button>
                     </div>
+                </li>
+                <li className="list-low">
                     <div>
                         <p>仮文2（TODOの内容）</p>
                         <button>完了</button>
@@ -37,19 +40,19 @@ export const App = () => {
                 </li>
             </ul>
         </div>
-        <div>
-        <p>完了エリア</p>
+        <div className="complete-area">
+            <p className="title">完了のTODO</p>
             <ul>
-                <li>
+                <li className="list-low">
                     <div>
                         <p>仮文1（TODOの内容）</p>
                         <button>戻す</button>
-                        <button>削除する</button>
                     </div>
+                </li>
+                <li className="list-low">
                     <div>
                         <p>仮文2（TODOの内容）</p>
-                        <button>完了</button>
-                        <button>削除する</button>
+                        <button>戻す</button>
                     </div>
                 </li>
             </ul>
