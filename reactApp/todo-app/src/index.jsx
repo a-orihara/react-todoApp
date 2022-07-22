@@ -3,7 +3,7 @@ import React from 'react';
 // react-domパッケージではアプリのトップレベルで使うためのDOM特有のメソッドを提供しています。
 import ReactDOM from "react-dom";
 // import ReactDOM from "react-dom";
-import App from './App';
+import { App } from './App';
 
 
 // ReactDOM:リアクトのオブジェクト
