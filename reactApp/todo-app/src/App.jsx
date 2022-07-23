@@ -31,11 +31,20 @@ export const App = () => {
     setIncompleteTodos(newTodos);
     // 空文字でリセット
     setTodoText("");
-    
   }
+
+  // (index):何行目が押されたか意識する必要がある
+  const onClickDelete = (index) => {
+    // 未完了のtodoを取得
+    const newTodos = [...incompleteTodos];
+    // splice:一つ目の引数に配列の何番目かを指定し、二つ目の引数にそこから何個削除するか指定する。
+    newTodos.splice(index, 1);
+    // 指定後に戻す
+    setIncompleteTodos(newTodos);
+  };
   return( 
   <> 
-    {/* -   -   -未完了、入力するエリア-   -   - */}
+    {/* -   -   -入力エリア-   -   - */}
     {/* reactのコンポーネントの場合、htmlタブのclassはclassNameと記載*/}
     <div className="input-area">
       {/* 入力エリア。入力した値＝{todoText}を、onChangeイベントを通して、入力エリアに表示する。 */}
@@ -44,13 +53,14 @@ export const App = () => {
       <button onClick={onClickAdd}>追加する</button>
     </div>
 
-    {/* -   -   -完了エリア-   -   - */}
+    {/* -   -   -未完了エリア-   -   - */}
     <div className="incomplete-area">
       <p className="title">未完了のTODO</p>
         <ul>
           {/* incompleteTodosの配列から、map(変数名はtodo)で取り出す。 */}
           {/* mapは配列の値を使った処理の結果が入る */}
-          {incompleteTodos.map((todo) => {
+          {/* mapは二つ目の引数を取れて、そこには配列の順番(index)が入る */}
+          {incompleteTodos.map((todo, index) => {
             return (
               // reactでは、map等の配列ループで返却する一番親のタグにkey={}を記載する。
               // これは、reactは仮想DOMの差分だけを反映させるので、何番目が変化したのかという
@@ -60,13 +70,17 @@ export const App = () => {
                   {/* todoのタイトルが入る */}
                   <p>{todo}</p>
                   <button>完了</button>
-                  <button>削除する</button>
+                  {/* onClickDeleteに(index)の引数を渡す事で、何番目の配列の値かがわかる */}
+                  {/* onClickDelete(index)だけだと関数の実行になり、延々実行し続けるので、アロー関数で渡す */}
+                  <button onClick={()=> onClickDelete(index)}>削除する</button>
                 </div>
               </li>
             );
           })}
         </ul>
     </div>
+
+    {/* -   -   -完了エリア-   -   - */}
     <div className="complete-area">
       <p className="title">完了のTODO</p>
         <ul>
