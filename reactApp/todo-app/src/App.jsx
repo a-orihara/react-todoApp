@@ -14,8 +14,8 @@ export const App = () => {
   const [todoText, setTodoText] = useState('');
   // 完了や未完了を表すのに配列を使用。また状態が変化するので、useStateを使用。
   // useStateのデフォルト値はTODOの初期値
-  const [incompleteTodos, setIncompleteTodos] = useState(["未完了1番", "未完了2番"]);
-  const [completeTodos, setCompleteTodos] = useState(["完了1番", "完了2番"]);
+  const [incompleteTodos, setIncompleteTodos] = useState([]);
+  const [completeTodos, setCompleteTodos] = useState([]);
   // <input>の要素がonChangeイベントで変更があった時に、入ってくるイベント。この(event)は(e)でも何でもいい。
   // <input>に値を入力する場合、通常こう書く。
   const onChangeTodoText = (event) =>  {
@@ -56,7 +56,17 @@ export const App = () => {
     setIncompleteTodos(newIncompleteTodos);
     // 更新された完了TODOをセット
     setCompleteTodos(newCompleteTodos);
+  }
 
+  // =   =   戻すボタン   =   =
+  const onClickBack = (index) => {
+    const newCompleteTodos = [...completeTodos];
+    newCompleteTodos.splice(index, 1);
+    const newIncompleteTodos = [...incompleteTodos, completeTodos[index]];
+    // 更新された完了TODOをセット
+    setCompleteTodos(newCompleteTodos);
+    // 更新された未完了TODOをセット
+    setIncompleteTodos(newIncompleteTodos);
   }
 
   return( 
@@ -101,17 +111,16 @@ export const App = () => {
     <div className="complete-area">
       <p className="title">完了のTODO</p>
         <ul>
-          {completeTodos.map((todo) => {
+          {completeTodos.map((todo, index) => {
             return (
               // reactでは、map等の配列ループで返却する一番親のタグにkey={}を記載する。
               // これは、reactは仮想DOMの差分だけを反映させるので、何番目が変化したのかという
               // 情報をkeyとして与えてあげる必要がある。
               <li key={todo} className="list-low">
                 <div>
-                  {/* todoのタイトルが入る */}
+                  {/* todo のタイトルが入る */}
                   <p>{todo}</p>
-                  <button>完了</button>
-                  <button>削除する</button>
+                  <button onClick={() => onClickBack(index)}>戻す</button>
                 </div>
               </li>
             );
