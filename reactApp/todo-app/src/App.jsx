@@ -23,6 +23,7 @@ export const App = () => {
     setTodoText(event.target.value);
   }
 
+  // =   =   入力追加ボタン   =   =
   const onClickAdd = () => {
     // if文は処理が一文字の場合は省略可。
     if (todoText === "") return;
@@ -33,6 +34,7 @@ export const App = () => {
     setTodoText("");
   }
 
+  // =   =   削除ボタン   =   =
   // (index):何行目が押されたか意識する必要がある
   const onClickDelete = (index) => {
     // 未完了のtodoを取得
@@ -42,6 +44,21 @@ export const App = () => {
     // 指定後に戻す
     setIncompleteTodos(newTodos);
   };
+
+  // =   =   完了ボタン   =   =
+  const onClickComplete = (index) =>{
+    const newIncompleteTodos = [...incompleteTodos];
+    // splice:一つ目の引数に配列の何番目かを指定し、二つ目の引数にそこから何個削除するか指定する。
+    newIncompleteTodos.splice(index, 1);
+    // completeTodos:完了のTODOの後に, 選んだincompleteTodosの(index)番目を付ける:
+    const newCompleteTodos = [...completeTodos, incompleteTodos[index]];
+    // 更新された未完了TODOをセット
+    setIncompleteTodos(newIncompleteTodos);
+    // 更新された完了TODOをセット
+    setCompleteTodos(newCompleteTodos);
+
+  }
+
   return( 
   <> 
     {/* -   -   -入力エリア-   -   - */}
@@ -69,7 +86,7 @@ export const App = () => {
                 <div>
                   {/* todoのタイトルが入る */}
                   <p>{todo}</p>
-                  <button>完了</button>
+                  <button onClick={() => onClickComplete(index)}>完了</button>
                   {/* onClickDeleteに(index)の引数を渡す事で、何番目の配列の値かがわかる */}
                   {/* onClickDelete(index)だけだと関数の実行になり、延々実行し続けるので、アロー関数で渡す */}
                   <button onClick={()=> onClickDelete(index)}>削除する</button>
