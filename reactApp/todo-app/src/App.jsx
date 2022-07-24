@@ -78,10 +78,18 @@ export const App = () => {
   <> 
     {/* // stateや関数をpropsを使って親Appから子InputTodoに渡す */}
     <InputTodo 
+      // 右側（親側）で値を指定
       todoText={todoText} 
       onChange={onChangeTodoText} 
       onClick={onClickAdd}
+      disabled={incompleteTodos.length >= 5}
     />
+    {/* .length:配列の個数 */}
+    { incompleteTodos.length >= 5 && (
+      <p style={{color: 'orange' }}>
+        登録出来るTODOは5個までだよ。OK,BOY?
+      </p>
+    )}
     <IncompleteTodos
       incompleteTodos={incompleteTodos}
       onClickComplete={onClickComplete}
