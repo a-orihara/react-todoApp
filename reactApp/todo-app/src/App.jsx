@@ -8,6 +8,9 @@ import { useState } from 'react';
 // import ColorfulMessage1 from './components/ColorfulMessage1'
 // // コンポーネントにexportを付けると、下記の記載にreactではこちらが主流。打ち間違いをエラー検知してくれるから。
 // import { ColorfulMessage2 } from './components/ColorfulMessage2'
+import { InputTodo } from './components/InputTodo'
+import { IncompleteTodos } from './components/IncompleteTodos'
+import { CompleteTodos } from './components/CompleteTodos'
 
 export const App = () => {
   // todoText:inputに入力した値
@@ -16,6 +19,8 @@ export const App = () => {
   // useStateのデフォルト値はTODOの初期値
   const [incompleteTodos, setIncompleteTodos] = useState([]);
   const [completeTodos, setCompleteTodos] = useState([]);
+
+  // =   =   入力欄   =   =
   // <input>の要素がonChangeイベントで変更があった時に、入ってくるイベント。この(event)は(e)でも何でもいい。
   // <input>に値を入力する場合、通常こう書く。
   const onChangeTodoText = (event) =>  {
@@ -71,63 +76,22 @@ export const App = () => {
 
   return( 
   <> 
-    {/* -   -   -入力エリア-   -   - */}
-    {/* reactのコンポーネントの場合、htmlタブのclassはclassNameと記載*/}
-    <div className="input-area">
-      {/* 入力エリア。入力した値＝{todoText}を、onChangeイベントを通して、入力エリアに表示する。 */}
-      <input placeholder="TODOを入力してね" type="text" value={todoText} onChange={onChangeTodoText}/>
-      {/* 入力完了ボタン */}
-      <button onClick={onClickAdd}>追加する</button>
-    </div>
-
-    {/* -   -   -未完了エリア-   -   - */}
-    <div className="incomplete-area">
-      <p className="title">未完了のTODO</p>
-        <ul>
-          {/* incompleteTodosの配列から、map(変数名はtodo)で取り出す。 */}
-          {/* mapは配列の値を使った処理の結果が入る */}
-          {/* mapは二つ目の引数を取れて、そこには配列の順番(index)が入る */}
-          {incompleteTodos.map((todo, index) => {
-            return (
-              // reactでは、map等の配列ループで返却する一番親のタグにkey={}を記載する。
-              // これは、reactは仮想DOMの差分だけを反映させるので、何番目が変化したのかという
-              // 情報をkeyとして与えてあげる必要がある。
-              <li key={todo} className="list-low">
-                <div>
-                  {/* todoのタイトルが入る */}
-                  <p>{todo}</p>
-                  <button onClick={() => onClickComplete(index)}>完了</button>
-                  {/* onClickDeleteに(index)の引数を渡す事で、何番目の配列の値かがわかる */}
-                  {/* onClickDelete(index)だけだと関数の実行になり、延々実行し続けるので、アロー関数で渡す */}
-                  <button onClick={()=> onClickDelete(index)}>削除する</button>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-    </div>
-
-    {/* -   -   -完了エリア-   -   - */}
-    <div className="complete-area">
-      <p className="title">完了のTODO</p>
-        <ul>
-          {completeTodos.map((todo, index) => {
-            return (
-              // reactでは、map等の配列ループで返却する一番親のタグにkey={}を記載する。
-              // これは、reactは仮想DOMの差分だけを反映させるので、何番目が変化したのかという
-              // 情報をkeyとして与えてあげる必要がある。
-              <li key={todo} className="list-low">
-                <div>
-                  {/* todo のタイトルが入る */}
-                  <p>{todo}</p>
-                  <button onClick={() => onClickBack(index)}>戻す</button>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-    </div>
-    </>
+    {/* // stateや関数をpropsを使って親Appから子InputTodoに渡す */}
+    <InputTodo 
+      todoText={todoText} 
+      onChange={onChangeTodoText} 
+      onClick={onClickAdd}
+    />
+    <IncompleteTodos
+      incompleteTodos={incompleteTodos}
+      onClickComplete={onClickComplete}
+      onClickDelete={onClickDelete}
+    />
+    <CompleteTodos
+      completeTodos={completeTodos}
+      onClickBack={onClickBack}
+    />
+  </>  
   )
 };
 
