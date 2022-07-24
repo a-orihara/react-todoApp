@@ -16,7 +16,7 @@ const style = {
 export const InputTodo = (props) => {
     
     // stateや関数を分割代入を使って取り出す
-    const { todoText, onChange, onClick } = props;
+    const { todoText, onChange, onClick, disabled } = props;
 
     return(
       /* -   -   -入力エリア-   -   - */
@@ -24,13 +24,17 @@ export const InputTodo = (props) => {
       // style={style}でCSSを当てる
       <div style={style}>
         {/* 入力エリア。入力した値＝{todoText}を、onChangeイベントを通して、入力エリアに表示する。 */}
-        <input 
+        <input
+          // 右側（親側）から渡って来た値を代入
+          // disabled:trueで入力出来ない状態にする
+          disabled={disabled}
           placeholder="TODOを入力してね" 
           type="text" value={todoText} 
           onChange={onChange}
         />
         {/* 入力完了ボタン */}
-        <button onClick={onClick}>追加する</button>
+        {/* disabled:trueでボタンを押せない状態にする */}
+        <button disabled={disabled} onClick={onClick}>追加する</button>
       </div>
     )
 };
