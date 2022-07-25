@@ -4,34 +4,32 @@ FROM ruby:3.1.2
 
 # railsに必要なnodejsとyarn、mysqlをインストールしています
 # nodejsとyarnはwebpackをインストールする際に必要
-# Yarnのレポジトリを有効化。レポジトリのGPGキーをcurlコマンドを使って取得する(debianはubuntuと互換性がある)
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-    # YarnのAPTパッケージレポジトリを自分のシステムに追加。teeコマンドを使って書き込み。
-    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
-    # レポジトリがシステムに加えられたらパッケージリストをアップデートしてからYarnをインストールする
-    # -qq:quietモードで実行。ログを極力表示させない。エラー以外を表示しないオプションです。
-    && apt-get update -qq \
-    && apt-get install -y nodejs yarn \
-    # myappディレクトリを作成
-    && mkdir /myapp
-    
+# レポジトリがシステムに加えられたらパッケージリストをアップデートしてからYarnをインストールする
+# -qq:quietモードで実行。ログを極力表示させない。エラー以外を表示しないオプションです。
+# build-essential:開発に必須のビルドツールを提供しているパッケージ。
+# ／gcc(GNU C Compiler)とかg++(GNU C++ Compiler), makeとかその他色々入るらしい。
+# nodejs:nodejsをインストール
+RUN apt-get update -qq \
+    && apt-get install -y build-essential nodejs yarn \
+    # rails_appディレクトリを作成
+    && mkdir /rails_app
+
 # 作業ディレクトリを設定。
 # ここで指定したディレクトリが、その後のDockerfile内でのRUN,COPYなどのあらゆる命令の起点となります。
-WORKDIR /myapp
+WORKDIR /rails_app
+COPY Gemfile /rails_app/Gemfile
+COPY Gemfile.lock /rails_app/Gemfile.lock
+
+# WORKDIR /myappにてbundle installを実行
+# 再ビルド時にbundle installするために記載
+RUN bundle install
 
 # カレントディレクトリ(ローカルのmyapp)を、コンテナ内のmyappへコピーする。
 # COPY a b :aをbにコピーする
 # DockerfileでCOPYかADDをするときにホスト側は絶対パスだとエラーになる
 # DockerfileでCOPYするときはホスト側のpathはdocker build時に指定したディレクトリからの相対パスで指定
-# 以下の内容が含まれる
-# # ビルドコンテキスト（アプリ直下のディレクトリ）内のGemfileをコンテナ内の/myapp/Gemfileへコピー
-# # COPY Gemfile /myapp/Gemfile
-# # COPY Gemfile.lock /myapp/Gemfile.lock
-COPY . /myapp
+COPY . /rails_app
 
-# WORKDIR /myappにてbundle installを実行
-# 再ビルド時にbundle installするために記載
-RUN bundle install
 # (COPY~RUN~ENTRYPOINT)コンテナー起動時に毎回実行されるスクリプトを追加
 # コンテナルート/usr/bin/にentrypoint.shをコピー
 # entrypoint.shにはコンテナ立ち上げ時に実行するスクリプトを書く

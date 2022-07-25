@@ -1,0 +1,97 @@
+version: '3.9'
+services:
+  db:
+    # 使用するimage
+    image: mysql:8.0
+    container_name: mysql_db
+    # command:起動時の既定のコマンドを上書きする(docker-composeで指定するcommandはDockerfileよりも優先される)
+    # mysql:8.0で外部のソフトウェアからmysqlへ接続する認証方式が変わり、セキュリティが強化された。
+    # 対応していないソフトウェアが多い為、認証方式を古いものに変更する
+    command: --default-authentication-plugin=mysql_native_password
+    # ボリュームとは記憶領域の事。ホストの記憶領域にコンテナをマウントする。
+    # ただし、マウントは記憶領域以外にディレクトリやファイル、メモリの場合もある
+    volumes:
+    # ymlファイルはリストの場合は-を付けて記載する.
+    # ホストの./db/mysql_dataにdockerコンテキスト内の/var/lib/mysqlとマウント。
+    # コンテナを削除すると、その中にあるDBのデータも一緒に消える為、これをしないと毎回データを入れ直さないといけない。
+    # だからDBをローカルにマウントしておく
+      - db-data:/var/lib/mysql
+    # 環境変数の設定。
+    # 外部ファイルから複数の環境変数をサービスコンテナー受け渡すには env_fileオプションを利用。
+    # 環境変数はコンテナ間で使う。環境変数については後段の2を参照
+    env_file:
+      - ./environments/db.env
+    # environment:
+    #   MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    # ローカル3306とコンテナ3306を接続
+    ports:
+      - '3307:3307'
+  
+  rails_app:
+    # docker buildの内容。docker .:dockerコンテキスト内でビルド(docker fileからイメージを作成)
+    #  docker composeと同じディレクトリにあるDockerfileをビルド
+    build:
+      context: .
+      dockerfile: ./docker/develop/Dockerfile
+    # build: ./docker/deploy
+    # imageとbuildが同時に宣言されている場合は, ビルドが優先的に実行されて,
+    # imageはその構成に使われる(imageによるプルは発生しない).
+    image: rails_img
+    container_name: rails_app
+    # 外部ファイル：ローカルのビルドコンテキストの./environments/db.envを参照
+    env_file:
+      - ./environments/db.env
+    # デフォルトの設定(config/puma.rb)でpumaが起動。オプション-C: 設定ファイル読み込み
+    # puma.sockを配置するディレクトリを作成
+    # tmpディレクトリは一時的に使うファイルやディレクトリを保存するディレクトリ
+    # tmpディレクトリの中にあるファイルやディレクトリはパソコンを再起動すると消える
+    # /myapp/tmp/socketsディレクトリの作成
+    # -p:復数階層のディレクトリを1回で作成
+    # productionモードではディレクトリ内にconfig/master.keyとconfig/credentials.ymlというファイルが必要。
+    command: bash -c "rm -f tmp/pids/server.pid && mkdir -p tmp/sockets && bundle exec puma -C config/puma.rb"
+    # command: bash -c "rm -f tmp/pids/server.pid && mkdir -p tmp/sockets && mkdir -p tmp/pids && bundle exec puma -C config/puma.rb -e production"
+    # ホストのカレントディレクトリにコンテナのルート直下のmyappディレクトリをマウント
+    # ホストで同期したappファイルが変更されると,コンテナのmyappディレクトリも自動的に変更される。
+    # 誰がどのPCのどのディレクトリで起動してもいいように、カレントディレクトリを指定
+    # これはバインドマウント：ホストの既存のディレクトリやファイルを使用
+    # 頻繁に書き換えるファイルはバインドマウントの方がいい。
+    volumes:
+      - .:/myapp
+      - public-data:/myapp/public
+      - tmp-data:/myapp/tmp
+      - log-data:/myapp/log
+    # 依存関係を示していて、起動順を指定できます。ここではdb→webへと起動します。DBを先に作成する必要がある為
+    # railsはDBと接続する際は、DBのIPアドレスを指定する為先に作る。そしてこれで接続先をdbと記載するだけで良くなる
+    depends_on:
+      - db
+    # ローカル3000とコンテナ3000を接続
+    ports:
+      - "3000:3000"
+    # -itのt=tty
+    tty: true
+    # -itのiの設定。stdin=標準入力をオープン。
+    stdin_open: true
+
+  react-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: react-app  
+    container_name: react-ctr
+    volumes:
+      # dockerコンテナ本体の、/usr/src/appを作業場に。
+      # ./reactAppでCRAをすると、./reactApp直下に<app名>が作成。
+      # なので、./reactApp直下が/usr/src/app直下にコピー。
+      # つまり、/usr/src/app/<reactで作成したapp名>となる
+      - ./reactApp:/usr/src/app
+    command: sh -c "cd todo-App && npm start"
+    # （左:自分のPCポート、右:dookerコンテナのポート）
+    ports:
+      - "3000:3000"
+    # コンテナが勝手に終了しないための設定
+    tty: true
+    # 標準入出力とエラー出力をコンテナに結びつける設定
+    stdin_open: true
+    # ホットリロードを行う設定
+    # environment:
+    #   - CHOKIDAR_USEPOLLING=true

@@ -10,7 +10,7 @@ set -e
 # rm -f:存在しないファイルを削除しようとした時に、エラーメッセージを出さない
 # pidはプロセスid。開発用webサーバーを起動する時に、tmp/pids/server.pidに書き込まれ、
 # 終了する時に削除される。server.pidにpidが書かれているとサーバーが起動中と判断されてしまう。
-rm -f /myapp/tmp/pids/server.pid
+rm -f /rails_app/tmp/pids/server.pid
 
 # CMDで渡されたコマンド（→Railsのサーバー起動）を実行
 exec "$@"
