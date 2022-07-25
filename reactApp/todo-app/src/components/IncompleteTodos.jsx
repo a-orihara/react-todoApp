@@ -6,7 +6,7 @@ export const IncompleteTodos = (props) => {
 
   return (
     <div className="incomplete-area">
-    <p className="title">未完了のTODO</p>
+    <p className="title">未完了のTODOCCmomokkcc</p>
       <ul>
         {/* incompleteTodosの配列から、map(変数名はtodo)で取り出す。 */}
         {/* mapは配列の値を使った処理の結果が入る */}
