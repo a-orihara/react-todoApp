@@ -7,7 +7,11 @@ services:
     image: react-app  
     container_name: react-ctr
     volumes:
-      - ./reactApp:/usr/src/app # ローカルをコンテナ内にマウント
+      # dockerコンテナ本体の、/usr/src/appを作業場に。
+      # ./reactAppでCRAをすると、./reactApp直下に<app名>が作成。
+      # なので、./reactApp直下が/usr/src/app直下にコピー。
+      # つまり、/usr/src/app/<reactで作成したapp名>となる
+      - ./reactApp:/usr/src/app
     command: sh -c "cd todo-App && npm start"
     # （左:自分のPCポート、右:dookerコンテナのポート）
     ports:
