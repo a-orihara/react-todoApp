@@ -1,7 +1,7 @@
 # rubyのバージョン指定.この中に初めからOSも入っている
 # ruby2系安定版はruby2.7.6。3系は3.1.2。
 FROM ruby:3.1.2
-
+ENV BUNDLER_VERSION=2.3.10
 # railsに必要なnodejsとyarn、mysqlをインストールしています
 # nodejsとyarnはwebpackをインストールする際に必要
 # レポジトリがシステムに加えられたらパッケージリストをアップデートしてからYarnをインストールする
@@ -22,7 +22,8 @@ COPY Gemfile.lock /rails_app/Gemfile.lock
 
 # WORKDIR /myappにてbundle installを実行
 # 再ビルド時にbundle installするために記載
-RUN bundle install
+RUN gem install bundler -v ${BUNDLER_VERSION} && \
+    bundle install
 
 # カレントディレクトリ(ローカルのmyapp)を、コンテナ内のmyappへコピーする。
 # COPY a b :aをbにコピーする
