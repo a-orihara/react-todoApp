@@ -80,7 +80,7 @@ services:
     image: nginx_img
     container_name: nginx-ctr
     volumes:
-      - .:/rails_app
+      - ./backend:/rails_app
       - public-data:/rails_app/public
       - tmp-data:/rails_app/tmp
     # ローカル80とコンテナ80を接続
