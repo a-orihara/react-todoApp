@@ -26,11 +26,12 @@ services:
     # ローカル3306とコンテナ3306を接続
     ports:
       - '3307:3306'
+
+# =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =
   
   rails_app:
     # docker buildの内容。docker .:dockerコンテキスト内でビルド(docker fileからイメージを作成)
     #  docker composeと同じディレクトリにあるDockerfileをビルド
-
     build:
       context: ./backend/
       dockerfile: docker/develop/Dockerfile
@@ -73,6 +74,8 @@ services:
     # -itのiの設定。stdin=標準入力をオープン。
     stdin_open: true
   
+# =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =
+  
   web:
     build:
       # containers/nginx内のdockerfileを使う
@@ -90,6 +93,8 @@ services:
     depends_on:
       - rails_app    
 
+# =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =
+  
   react-app:
     build:
       context: ./reactApp/
