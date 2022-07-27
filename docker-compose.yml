@@ -57,7 +57,7 @@ services:
     # これはバインドマウント：ホストの既存のディレクトリやファイルを使用
     # 頻繁に書き換えるファイルはバインドマウントの方がいい。
     volumes:
-      - .:/rails_app
+      - ./backend:/rails_app
       - public-data:/rails_app/public
       - tmp-data:/rails_app/tmp
       - log-data:/rails_app/log
