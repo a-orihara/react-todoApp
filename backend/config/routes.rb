@@ -9,6 +9,8 @@ Rails.application.routes.draw do
       # resources :hogeで:hogeというリソースに対して７つのルーティングが自動的に作成されます。
       # 7つというのはHTTPメソッドであるGET, POST, DELETEなどです。下記参照。
       # only: [:index, :create, :destroy]で7つの内、:index, :create, :destroyだけ作成
+      # 一長一短ですが、「原則はresources、resourceで書く、
+      # 例外的に必要であればput ... to:も許容する」というルールがいいかと思います
       resources :todos, only: [:index, :create, :destroy]
     end 
   end 
